@@ -19,48 +19,52 @@ import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
  * @date 2018-9-22 / 下午 04:32
  */
 @Data
-public class User {
+public class UserWithGroup {
 
     /**
     * 姓名
     */
-    @NotBlank(message = "{user.name.notBlank}")
+    @NotBlank(groups = Must.class, message = "{user.name.notBlank}")
     private String name;
 
     /**
     * 年龄
     */
-    @Range(min = 1, max = 150, message = "{user.age.range}")
+    @Range(min = 1, max = 150, groups = Must.class, message = "{user.age.range}")
     private int age;
 
     /**
      * 手机号码
      */
-    @Pattern(regexp = "^1(3|4|5|7|8)\\\\d{9}$", flags = CASE_INSENSITIVE, message = "{user.phone.format.error}")
+    @Pattern(regexp = "^1(3|4|5|7|8)\\\\d{9}$", flags = CASE_INSENSITIVE, groups = Optional.class, message = "{user.phone.format.error}")
     private String phone;
 
     /**
     * 性别
     */
-    @NotEmpty(message = "{user.sex.notEmpty}")
+    @NotEmpty(groups = Optional.class, message = "{user.sex.notEmpty}")
     private String sex;
 
     /**
     * 地址
     */
-    @Length(min = 1, max = 15, message = "{user.address.length.exceed}")
+    @Length(min = 1, max = 15, groups = Optional.class, message = "{user.address.length.exceed}")
     private String address;
 
     /**
     * 是否已婚
     */
-    @AssertFalse(message = "{user.is.not.married}")
+    @AssertFalse(groups = Must.class, message = "{user.is.not.married}")
     private Boolean isMarried;
 
     /**
     * 邮箱
     */
-    @Email(message = "{user.email.format.error}")
+    @Email(groups = Optional.class, message = "{user.email.format.error}")
     private String email;
+
+    public interface Must{}
+
+    public interface Optional{}
 
 }

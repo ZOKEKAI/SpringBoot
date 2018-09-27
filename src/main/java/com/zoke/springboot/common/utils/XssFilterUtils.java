@@ -32,12 +32,14 @@ public class XssFilterUtils {
      * @return 处理后的字符串
      */
     public static String paramXssHandler(String param){
-        int count = 0;
-        while (isNeedXssHandler(param)){
-            param = matchAndDispatcher(param);
-            count++;
-            if(count > 100){
-                return param;
+        if(StringUtils.isNotBlank(param)){
+            int count = 0;
+            while (isNeedXssHandler(param)){
+                param = matchAndDispatcher(param);
+                count++;
+                if(count > 100){
+                    return param;
+                }
             }
         }
         return param;
@@ -128,7 +130,7 @@ public class XssFilterUtils {
      */
     public static boolean isJson(String value) {
         String jsonRegex = "\\[[^\\]]+\\]|\\{[^\\}]+\\}";
-        if (value.matches(jsonRegex)) {
+        if (StringUtils.isNotBlank(value) && value.matches(jsonRegex)) {
             return true;
         }
         return false;
@@ -141,6 +143,9 @@ public class XssFilterUtils {
      * @return boolean
      */
     public static boolean isNeedXssHandler(String result) {
+        if(StringUtils.isEmpty(result)){
+            return false;
+        }
         if (SCRIPT_PATTERN.matcher(result).find() || SRCTAG_PATTERN.matcher(result).find()
         || EVAL_PATTERN.matcher(result).find() || ATAG_PATTERN.matcher(result).find()
         || ONLOAD_FUNCTION_PATTERN.matcher(result).find() || EXPRESSION_PATTERN.matcher(result).find()
