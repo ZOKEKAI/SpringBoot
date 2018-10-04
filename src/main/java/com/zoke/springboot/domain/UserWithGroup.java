@@ -1,4 +1,4 @@
-package com.zoke.springboot.pojo;
+package com.zoke.springboot.domain;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Email;

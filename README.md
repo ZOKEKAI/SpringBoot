@@ -9,4 +9,9 @@
 
 2018-9-27
 
-1、SpringBoot添加Validation校验功能使用示例
+1、SpringBoot添加Validation校验功能使用示例。
+
+
+2018-10-04
+
+1、SpringBoot整合Mybatis功能(druid、ognl)。

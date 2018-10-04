@@ -1,4 +1,4 @@
-package com.zoke.springboot.pojo;
+package com.zoke.springboot.domain;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Email;
@@ -8,9 +8,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.AssertFalse;
-import javax.validation.constraints.Pattern;
-
-import static javax.validation.constraints.Pattern.Flag.CASE_INSENSITIVE;
 
 /**
  * User实体
@@ -28,6 +25,11 @@ public class User {
     private String name;
 
     /**
+     * 密码
+     */
+    private String password;
+
+    /**
     * 年龄
     */
     @Range(min = 1, max = 150, message = "{user.age.range}")
@@ -36,7 +38,6 @@ public class User {
     /**
      * 手机号码
      */
-    @Pattern(regexp = "^1(3|4|5|7|8)\\\\d{9}$", flags = CASE_INSENSITIVE, message = "{user.phone.format.error}")
     private String phone;
 
     /**

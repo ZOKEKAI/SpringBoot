@@ -1,6 +1,6 @@
 package com.zoke.springboot;
 
-import com.zoke.springboot.pojo.User;
+import com.zoke.springboot.domain.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

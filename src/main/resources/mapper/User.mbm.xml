@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zoke.springboot.mapper.UserMapper">
+
+    <resultMap id="UserMap" type="com.zoke.springboot.domain.User" >
+        <result property="name" column="name"/>
+        <result property="password" column="password"/>
+        <result property="age" column="age"/>
+        <result property="phone" column="phone"/>
+        <result property="sex" column="sex"/>
+        <result property="address" column="address"/>
+        <result property="isMarried" column="is_married"/>
+        <result property="email" column="email"/>
+    </resultMap>
+
+    <sql id="columns">
+        <![CDATA[
+          id, name, age, password, phone, sex, address, is_married, email
+        ]]>
+    </sql>
+
+    <sql id="where">
+        <where>
+            <if test="@Ognl@isNotEmpty(name)">
+                AND name = #{name}
+            </if>
+            <if test="@Ognl@isNotEmpty(password)">
+                AND password = #{password}
+            </if>
+            <if test="@Ognl@isNotEmpty(age)">
+                AND age = #{age}
+            </if>
+            <if test="@Ognl@isNotEmpty(phone)">
+                AND phone = #{phone}
+            </if>
+            <if test="@Ognl@isNotEmpty(sex)">
+                AND sex = #{sex}
+            </if>
+            <if test="@Ognl@isNotEmpty(address)">
+                AND address = #{address}
+            </if>
+            <if test="@Ognl@isNotEmpty(isMarried)">
+                AND is_married = #{isMarried}
+            </if>
+            <if test="@Ognl@isNotEmpty(email)">
+                AND email = #{email}
+            </if>
+        </where>
+    </sql>
+
+    <select id="search" resultMap="UserMap">
+        SELECT
+            <include refid="columns"/>
+        FROM user
+            <include refid="where"/>
+    </select>
+    
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+            INSERT INTO user ( name, age, password, phone, sex, address, is_married, email )
+            VALUES (#{name} , #{password} , #{age} , #{phone} , #{sex} , #{address} , #{isMarried} , #{email} )
+    </insert>
+
+</mapper>
+

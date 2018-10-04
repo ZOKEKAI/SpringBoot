@@ -1,6 +1,6 @@
 package com.zoke.springboot.web;
 
-import com.zoke.springboot.pojo.User;
+import com.zoke.springboot.domain.User;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;

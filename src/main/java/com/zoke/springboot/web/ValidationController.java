@@ -1,9 +1,9 @@
 package com.zoke.springboot.web;
 
-import com.zoke.springboot.pojo.User;
-import com.zoke.springboot.pojo.UserWithGroup;
-import com.zoke.springboot.pojo.UserWithGroup.Must;
-import com.zoke.springboot.pojo.UserWithGroup.Optional;
+import com.zoke.springboot.domain.User;
+import com.zoke.springboot.domain.UserWithGroup;
+import com.zoke.springboot.domain.UserWithGroup.Must;
+import com.zoke.springboot.domain.UserWithGroup.Optional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
