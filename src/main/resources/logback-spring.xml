@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG_BASE" value="/project/logs/springboot"/>    <!-- 日志存储的路径，如果部署在Linux下则需要提前创建好该文件目录并设置好读写权限 -->
+    <property name="LOG_MAX_SIZE" value="50MB"/>    				<!-- 每个日志文件最多50MB，超过将会进行切割 -->
+    <property name="LOG_MAX_INDEX" value="5"/>            			<!-- 日志最多个数为5个，超过5个会自动删除老的日志文件 -->
+    <property name="LOG_APP_NAME" value="SpringBoot"/>				<!-- 项目名称，用于区分不同的项目日志 -->
+	<!-- 彩色日志格式 -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(--){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
+    
+	<!-- 彩色日志 -->
+    <!-- 彩色日志依赖的渲染类 -->
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wex"
+                    converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="wEx"
+                    converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    
+	<!-- Console日志打印appender设置，不进行级别过滤，具体的过滤级别根据root和logger的配置而定 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 文件输出设置，按照每天生成日志文件 -->
+    <!-- 错误日志输出appender -->
+    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_BASE}/error.log</file>
+        <!-- 设置日志打印级别过滤，只打印ERRO级别的日志，如果错误级别不是ERROR直接return掉 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+		<!-- 设置日志文件个数最小以及最大范围限制 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/error.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>${LOG_MAX_INDEX}</maxIndex>
+        </rollingPolicy>
+		<!-- 设置日志文件大小限制 -->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${LOG_MAX_SIZE}</maxFileSize>
+        </triggeringPolicy>
+		<!-- 设置错误日志信息打印的格式(具体打印哪些信息，以及排列顺序等) -->
+        <encoder>
+            <pattern>%d [${LOG_APP_NAME}] [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 业务日志输出appender -->
+    <appender name="BIZ_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_BASE}/biz.log</file>
+        <!--设置日志打印级别过滤，只打印INFO级别的日志，如果错误级别不是INFO直接return掉-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+		<!-- 设置日志文件个数最小以及最大范围限制 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/biz.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>${LOG_MAX_INDEX}</maxIndex>
+        </rollingPolicy>
+		<!-- 设置日志文件大小限制 -->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${LOG_MAX_SIZE}</maxFileSize>
+        </triggeringPolicy>
+		<!-- 设置错误日志信息打印的格式(具体打印哪些信息，以及排列顺序等) -->
+        <encoder>
+            <pattern>%d [${LOG_APP_NAME}] [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <!--——————————————————————以下配置为本地调试环境配置，本地调试环境配置和多环境配置只能二选一，不能一起配置，根据实际情况使用——————————————————————-->
+
+    <!--使用root标签进行设置，不定义具体路径，默认全部路径，可定义一个或者多个appender，appender进行日志的处理，
+    例如控制台显示、输出到log文件等方式，供下面的logger标签继承使用，例如下面的DEBUG级别的root标签设置，如果只设置root标签
+    而没有设置logger标签则会打印项目所有的DEBUG日志，为了避免不必要的日志打印，需要使用logger标签限制日志的输出级别-->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+        <!--平时的调试开发可以不打印如下两个文件日志，这里是为了测试效果-->
+        <appender-ref ref="ERROR_LOG"/>
+        <appender-ref ref="BIZ_LOG"/>
+    </root>
+    <!--使用logger标签进行日志输出设置，logger和root类似，root只是根logger而已，必须设置name属性，自定义
+    具体包路径下面的代码运行日志输出级别，logger定义的级别将会替换root定义的级别，从而在指定的包路径下使用logger
+    定义的级别而不使用root标签定义的默认级别，这里如果不定义appender，则会继承并使用root标签的appender，如果有
+    多个logger重复对某一包路径(必须一模一样,例如com.zoke.springboot.web)进行日志级别设定，则以最后一个为准，
+    如果没有设置精确的包路径的日志级别，则使用他的上级的日志级别(例如com.zoke，如果有设定的话，否则继续向上使用root定义的级别)-->
+    <logger name="com.zoke" level="DEBUG"/>
+    <logger name="com.zoke.springboot.web" level="INFO"/>
+    <!--设置mapper日志级别的这个logger可以不写，因为上级(com.zoke)已经配置为DEBUG，这里只是为了展示更细粒度的级别配置-->
+    <logger name="com.zoke.springboot.mapper" level="DEBUG"/>
+    <logger name="org.mybatis" level="DEBUG"/>
+    <logger name="org.springframework" level="ERROR"/>
+    <logger name="org.apache" level="ERROR"/>
+    <logger name="com.alibaba" level="ERROR"/>
+    <logger name="o.h" level="ERROR"/>
+    <!--注意：如果logger里面包含自定义的appender，那最好logger加上 additivity="false" 属性，以避免日志重复打印，
+    这个属性的意思是日志只在当前appender中进行打印，不会向上传递到父类的appender，注意，在logger没有配置appender，
+    只有root有配置appender的这种情况下不能配置 additivity="false" 属性，否则日志不能向上传递，导致没有appender
+    处理该日志，结果就是日志没有打印-->
+
+
+    <!--——————————————————————以下配置为多环境配置，如果使用了spring Profile配置，需要将上面的本地调试环境配置删掉——————————————————————-->
+
+	<!--测试、生产环境日志输出设置-->
+    <springProfile name="test,prod">
+
+        <!--部署到测试以及生产这些环境的日志要求是保证错误可排查的情况下尽量少打印，配置策略是直接在root限制级别为ERROR，默认打印大于或等于ERROR级别的日志,
+        如果某个包路径下需要打印详细日志时再用logger的级别覆盖该级别，这样做的好处是尽量控制不必要的日志输出影响服务器空间-->
+        <root level="ERROR">
+            <!--加入错误日志appender， 表示加入日志的处理者-->
+            <appender-ref ref="ERROR_LOG"/>
+            <!--加入业务日志appender， 表示加入日志的处理者-->
+            <appender-ref ref="BIZ_LOG"/>
+        </root>
+
+        <!--日志输出设置，自定义具体包路径下面的代码运行日志输出级别 -->
+        <logger name="com.zoke" level="INFO"/>
+        <logger name="com.zoke.springboot.mapper" level="ERROR"/>
+        <logger name="org.mybatis" level="ERROR"/>
+        <logger name="org.springframework" level="ERROR"/>
+        <logger name="org.apache" level="ERROR"/>
+        <logger name="com.alibaba" level="ERROR"/>
+        <logger name="o.h" level="ERROR"/>
+    </springProfile>
+
+	<!--本地环境日志输出设置-->
+    <springProfile name="local">
+
+        <!--在本地调试时日志尽量打印全，但也不需要全部都打印，配置策略是直接在root限制级别为DEBUG，默认打印大于或等于DEBUG级别的日志,
+        如果某个包路径下不需要打印多余的DEBUG日志时再用logger的级别覆盖该级别，这样做的好处是尽量不漏打印一些系统日志-->
+        <root level="DEBUG">
+            <!--加入Console日志打印appender，表示加入日志的处理者-->
+            <appender-ref ref="STDOUT"/>
+        </root>
+
+        <!--日志输出设置，自定义具体包路径下面的代码运行日志输出级别 -->
+        <logger name="com.zoke" level="DEBUG"/>
+        <logger name="com.zoke.springboot.mapper" level="DEBUG"/>
+        <logger name="org.mybatis" level="DEBUG"/>
+        <logger name="org.springframework" level="ERROR"/>
+        <logger name="org.apache" level="ERROR"/>
+        <logger name="com.alibaba" level="ERROR"/>
+        <logger name="o.h" level="ERROR"/>
+    </springProfile>
+
+</configuration>

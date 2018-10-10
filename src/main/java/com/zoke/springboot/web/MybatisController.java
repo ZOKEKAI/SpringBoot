@@ -31,6 +31,7 @@ public class MybatisController {
         List<User> userList;
         try {
             userList = userService.search(user);
+            log.info("user list： " + userList);
         }catch (Exception exception){
             log.error("search user exception", exception);
             return null;
@@ -43,6 +44,7 @@ public class MybatisController {
         try {
             userService.save(user);
         }catch (Exception exception){
+            log.error("save user exception", exception);
             return ResponseMsg.buildFailMsg();
         }
         return ResponseMsg.buildSuccessMsg();
