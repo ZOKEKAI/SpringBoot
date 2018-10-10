@@ -28,7 +28,7 @@ public class FilterConfiguration {
         filterRegistration.setFilter(new XssFilter());
         filterRegistration.setEnabled(true);
         //配置需要拦截的路径，原来web.xml配置的init-param参数可用addInitParameter()方法添加
-        filterRegistration.addUrlPatterns("/*");
+        filterRegistration.addUrlPatterns("/mybatis", "/thymeleaf", "/validate", "/template");
         //设置拦截器拦截的前后顺序
         filterRegistration.setOrder(1);
         return filterRegistration;

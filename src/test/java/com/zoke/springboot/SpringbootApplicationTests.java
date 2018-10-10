@@ -19,7 +19,7 @@ public class SpringbootApplicationTests {
         MultiValueMap<String,String> param = new LinkedMultiValueMap<>();
         param.add("name", "露西");
         param.add("age", "25");
-        User user = restTemplate.postForObject("http://localhost:8080/get/user", param, User.class);
+        User user = restTemplate.postForObject("http://localhost:8080/template/get/user", param, User.class);
         System.out.println("使用restTemplate工具请求获取到的对象为：" + user);
     }
 
